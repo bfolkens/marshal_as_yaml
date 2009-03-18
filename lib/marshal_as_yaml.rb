@@ -11,9 +11,17 @@ module MarshalAsYaml
           return nil if read_attribute(attr).nil?
           YAML.load read_attribute(attr)
         end
+        
+        define_method "#{attr}_without_marshaling" do
+          read_attribute attr
+        end
       
         define_method "#{attr}=" do |val|
           write_attribute attr, (val && val.to_yaml)
+        end
+
+        define_method "#{attr}_without_marshaling=" do |val|
+          write_attribute attr, val
         end
       end
     end
