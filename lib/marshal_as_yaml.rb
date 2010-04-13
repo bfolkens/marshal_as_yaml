@@ -9,7 +9,11 @@ module MarshalAsYaml
       attrs.each do |attr|
         define_method attr do
           return nil if read_attribute(attr).nil?
-          YAML.load read_attribute(attr)
+          begin
+            YAML.load read_attribute(attr)
+          rescue YAML::ParseError, YAML::TypeError, ArgumentError => ye
+            errors.add(attr, ye.message) unless errors.on(attr)
+          end
         end
         
         define_method "#{attr}_without_marshaling" do
