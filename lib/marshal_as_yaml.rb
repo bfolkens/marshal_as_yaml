@@ -11,8 +11,8 @@ module MarshalAsYaml
           return nil if read_attribute(attr).nil?
           begin
             YAML.load read_attribute(attr)
-          rescue YAML::ParseError, YAML::TypeError, ArgumentError => ye
-            errors.add(attr, ye.message) unless errors.on(attr)
+          rescue YAML::SyntaxError, YAML::TypeError, ArgumentError => ye
+            errors.add(attr, ye.message) unless errors[attr].any?
           end
         end
         
